@@ -1,0 +1,14 @@
+import 'package:email_validator/email_validator.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/src/widgets/container.dart';
+import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_application_1/services/services.dart';
+import 'package:flutter_application_1/views/widgets/widgets.dart';
+
+import 'dart:convert';
+import 'package:fluttertoast/fluttertoast.dart';
+
+part 'ongkirpage.dart';
+part 'emailsend.dart';
+
+

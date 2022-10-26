@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/services/services.dart';
+import 'package:flutter_application_1/views/pages/pages.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 void main() {
@@ -16,9 +17,9 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'DEPD X CC',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -35,67 +36,56 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  
-
-  
-
   final _loginKey = GlobalKey<FormState>();
   final ctrlEmail = TextEditingController();
-  
-@override
+
+  @override
   void dispose() {
     // TODO: implement dispose
     ctrlEmail.dispose();
     super.dispose();
   }
 
+//--------- KIRIM EMAIL CIREST API ---------------
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Send Email"),
+        title: Text("DEPD X CC"),
       ),
       body: Container(
-        
-        padding: EdgeInsets.all(16), 
-        
-        child: Form(
-            key: _loginKey,
-            child: TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                    labelText: "Email", prefixIcon: Icon(Icons.email)),
-                controller: ctrlEmail,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  return !EmailValidator.validate(value.toString())
-                      ? 'Email tidak valid!'
-                      : null;
-                })),
+        width: double.infinity,
+        padding: EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Emailsend()),
+                    );
+                  },
+                  child: Text("Send Mail Page")),
+            ),
+            Container(
+              child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const Ongkirpage()),
+                    );
+                  },
+                  child: Text("Ongkir Page")),
+            )
+          ],
+        ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          if (_loginKey.currentState!.validate()){
-            await EmailService().sendmail(ctrlEmail.text.toString()).then((value) {
-            var result = json.decode(value.body);
-            // print(result.toString());
 
-            Fluttertoast.showToast(
-              msg: "Berhasil!",
-              toastLength: Toast.LENGTH_SHORT,
-            );
-          });
-          } else {
-            Fluttertoast.showToast(
-              msg: "Gagal",
-              toastLength: Toast.LENGTH_SHORT,
-            );
-          }
-          
-        },
-        tooltip: 'Increment',
-        child: const Icon(Icons.send),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
