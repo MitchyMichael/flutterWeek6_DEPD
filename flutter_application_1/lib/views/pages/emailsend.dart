@@ -47,12 +47,16 @@ class _EmailsendState extends State<Emailsend> {
                 .sendmail(ctrlEmail.text.toString())
                 .then((value) {
               var result = json.decode(value.body);
-              // print(result.toString());
+              print(result.toString());
 
               Fluttertoast.showToast(
-                msg: "Berhasil!",
+                msg: (result['message'] == null 
+                  ? result['error'] 
+                  : result['message']),
                 toastLength: Toast.LENGTH_SHORT,
+                
               );
+              
             });
           } else {
             Fluttertoast.showToast(
