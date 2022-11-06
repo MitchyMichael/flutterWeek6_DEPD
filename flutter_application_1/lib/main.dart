@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:email_validator/email_validator.dart';
@@ -36,17 +37,21 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final _loginKey = GlobalKey<FormState>();
-  final ctrlEmail = TextEditingController();
+  Uri? _initialUri;
+  Uri? _latestUri;
+  Object? _err;
+  StreamSubscription? _sub;
+  final _scaffoldKey = GlobalKey();
+  bool _initialUriIsHandled = false;
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    ctrlEmail.dispose();
-    super.dispose();
+  void _handleIncomingLinks() {
+
   }
 
-//--------- KIRIM EMAIL CIREST API ---------------
+  Future<void> _handleInitialUri() async {
+    
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
