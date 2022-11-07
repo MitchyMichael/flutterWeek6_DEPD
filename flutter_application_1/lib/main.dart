@@ -45,11 +45,11 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _initialUriIsHandled = false;
 
   void _handleIncomingLinks() {
-
+    
   }
 
   Future<void> _handleInitialUri() async {
-    
+
   }
 
   @override
