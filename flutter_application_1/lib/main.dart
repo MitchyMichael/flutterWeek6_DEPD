@@ -10,6 +10,8 @@ import 'package:flutter_application_1/views/pages/pages.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:uni_links/uni_links.dart';
 
+import 'package:lottie/lottie.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -23,7 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'DEPD X CC',
       theme: ThemeData(
-        primarySwatch: Colors.grey,
+        primarySwatch: Colors.blue,
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -49,15 +51,17 @@ class _MyHomePageState extends State<MyHomePage> {
   bool handleThis = false;
 
   void _handleIncomingLinks() {
+    //Buat kalau launch modenya SINGLE TASK
     if (!kIsWeb) {
       _sub = uriLinkStream.listen((Uri? uri) {
         if (!mounted) return;
         print('Uri: $uri');
         setState(() {
-          _latestUri = uri;
+          _latestUri = uri; //kalau linknya benar
           _err = null;
         });
       }, onError: (Object err) {
+        //kalau linknya salah
         if (!mounted) return;
         print('Err : $err');
         setState(() {
@@ -93,21 +97,29 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    //_handleIncomingLinks();
     if (handleThis == true) {
       return const Emailverify(); //Ke page congratulation jika link yang didapatkan sama
 
     } else {
       _handleInitialUri(); //Untuk print jika tidak ada uri yang masuk
       return Scaffold(
-        appBar: AppBar(
-          title: Text("DEPD X CC"),
-        ),
         body: Container(
           width: double.infinity,
           padding: EdgeInsets.all(20),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Text(
+                "DEPD X CC Application",
+                style: TextStyle(
+                  color: Colors.blue,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 24,
+                  ),
+                ),
+              //Image.asset("assets/gif/robot.gif"),
+              Lottie.asset("assets/lottie/robot.json"),
               Container(
                 child: ElevatedButton(
                     onPressed: () {

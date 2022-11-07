@@ -8,8 +8,11 @@ import 'package:flutter_application_1/views/widgets/widgets.dart';
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import 'package:lottie/lottie.dart';
+
 part 'ongkirpage.dart';
 part 'emailsend.dart';
 part 'emailverify.dart';
+
 
 

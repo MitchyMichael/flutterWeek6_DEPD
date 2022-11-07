@@ -1,7 +1,7 @@
 part of 'pages.dart';
 
 class Emailsend extends StatefulWidget {
-  const Emailsend({ Key? key }) : super(key: key);
+  const Emailsend({Key? key}) : super(key: key);
 
   @override
   _EmailsendState createState() => _EmailsendState();
@@ -40,6 +40,7 @@ class _EmailsendState extends State<Emailsend> {
                       : null;
                 })),
       ),
+
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           if (_loginKey.currentState!.validate()) {
@@ -50,13 +51,11 @@ class _EmailsendState extends State<Emailsend> {
               print(result.toString());
 
               Fluttertoast.showToast(
-                msg: (result['message'] == null 
-                  ? result['error'] 
-                  : result['message']),
+                msg: (result['message'] == null
+                    ? result['error']
+                    : result['message']),
                 toastLength: Toast.LENGTH_SHORT,
-                
               );
-              
             });
           } else {
             Fluttertoast.showToast(
