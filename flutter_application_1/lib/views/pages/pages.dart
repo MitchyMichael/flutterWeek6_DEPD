@@ -10,5 +10,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 part 'ongkirpage.dart';
 part 'emailsend.dart';
+part 'emailverify.dart';
 
 
