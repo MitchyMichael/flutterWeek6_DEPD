@@ -2,7 +2,7 @@ part of 'services.dart';
 
 class MasterDataService {
   // Province ------------------------------------------------------
-  static Future<Map<String, dynamic>> getProvince() async {
+  static Future<List<Province>> getProvince() async {
     var respose = await http.get(
       Uri.https(Const.baseUrl, "/starter/province"),
       headers: <String, String>{
@@ -12,19 +12,18 @@ class MasterDataService {
     );
 
     var job = json.decode(respose.body);
-    Map<String, dynamic> result = {};
-    result['status'] = job['rajaongkir']['status']['code'];
-    result['msg'] = job['rajaongkir']['status']['description'];
 
-    if (result['status'] == 200) {
-      result['data'] = job['rajaongkir']['results'];
+    List<Province> result = [];
+    if (respose.statusCode == 200) {
+      result = (job['rajaongkir']['results'] as List)
+          .map((e) => Province.fromJson(e))
+          .toList();
     }
-
     return result;
   }
 
   // City -----------------------------------------------------
-  static Future<Map<String, dynamic>> getCity() async {
+  static Future<List<City>> getCity(var provId) async {
     var respose = await http.get(
       Uri.https(Const.baseUrl, "/starter/city"),
       headers: <String, String>{
@@ -34,14 +33,22 @@ class MasterDataService {
     );
 
     var job = json.decode(respose.body);
-    Map<String, dynamic> result = {};
-    result['status'] = job['rajaongkir']['status']['code'];
-    result['msg'] = job['rajaongkir']['status']['description'];
 
-    if (result['status'] == 200) {
-      result['data'] = job['rajaongkir']['results'];
+    List<City> result = [];
+    if (respose.statusCode == 200) {
+      result = (job['rajaongkir']['results'] as List)
+          .map((e) => City.fromJson(e))
+          .toList();
     }
 
-    return result;
+    List<City> selectedCity = [];
+
+    for (var c in result){
+      if (c.provinceId == provId){
+        selectedCity.add(c);
+      }
+    }
+    
+    return selectedCity;
   }
 }

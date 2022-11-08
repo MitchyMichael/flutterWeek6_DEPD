@@ -26,7 +26,9 @@ class MyApp extends StatelessWidget {
       title: 'DEPD X CC',
       theme: ThemeData(
         primarySwatch: Colors.blue,
+
       ),
+      debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
@@ -98,6 +100,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     //_handleIncomingLinks();
+
     if (handleThis == true) {
       return const Emailverify(); //Ke page congratulation jika link yang didapatkan sama
 
