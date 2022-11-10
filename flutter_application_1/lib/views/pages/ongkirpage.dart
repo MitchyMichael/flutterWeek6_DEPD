@@ -1,26 +1,24 @@
 part of 'pages.dart';
 
 class Ongkirpage extends StatefulWidget {
-  const Ongkirpage({ Key? key }) : super(key: key);
+  const Ongkirpage({Key? key}) : super(key: key);
 
   @override
   _OngkirpageState createState() => _OngkirpageState();
 }
 
 class _OngkirpageState extends State<Ongkirpage> {
-
   bool isLoading = false;
   String dropdownvalue = 'jne';
-  var kurir = [
-    'jne','pos','tiki'
-  ];
+  var kurir = ['jne', 'pos', 'tiki'];
 
   final ctrlBerat = TextEditingController();
 
   dynamic provId;
   dynamic provinceData;
-  dynamic selectedProv;
-  Future<List<Province>> getProvinces() async{
+  dynamic selectedProvOrigin;
+  dynamic selectedProvDestination;
+  Future<List<Province>> getProvinces() async {
     dynamic listProvince;
     await MasterDataService.getProvince().then((value) {
       setState(() {
@@ -31,9 +29,11 @@ class _OngkirpageState extends State<Ongkirpage> {
   }
 
   dynamic cityId;
-  dynamic cityData;
-  dynamic selectedCity;
-  Future<List<City>> getCities(dynamic provId) async{
+  dynamic cityDataOrigin;
+  dynamic cityDataDestination;
+  dynamic selectedCityOrigin;
+  dynamic selectedCityDestination;
+  Future<List<City>> getCities(dynamic provId) async {
     dynamic listCity;
     await MasterDataService.getCity(provId).then((value) {
       setState(() {
@@ -42,6 +42,12 @@ class _OngkirpageState extends State<Ongkirpage> {
     });
     return listCity;
   }
+
+  bool isProvinceOriginSelected = false;
+  bool isCityOriginSelected = false;
+
+  bool isProvinceDestinationSelected = false;
+  bool isCityDestinationSelected = false;
 
   @override
   void initState() {
@@ -54,133 +60,330 @@ class _OngkirpageState extends State<Ongkirpage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("Hitung Ongkir"),
-        centerTitle: true,
       ),
       body: Stack(
         children: [
           Container(
-            width: double.infinity,
-            height: double.infinity,
-            child: Column(
-              children: [
-                //Flexible untuk form
-                Flexible(
-                  flex: 2,
-                  child: Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            DropdownButton(
-                              value: dropdownvalue,
-                              icon: const Icon(Icons.arrow_drop_down),
-                              items: kurir.map((String items) {
-                                return DropdownMenuItem(
-                                  value: items,
-                                  child: Text(items),
-                                );
-                              }).toList(),
-                              onChanged: (String? newValue){
-                                setState(() {
-                                  dropdownvalue = newValue!;
-                                });
-                              }
-                            ),
-                            SizedBox(
-                              width: 200,
-                              child: TextFormField(
-                                keyboardType: TextInputType.number,
-                                controller: ctrlBerat,
-                                decoration: InputDecoration(
-                                  labelText: 'Berat (gr)',
-                                ),
-                                autovalidateMode: AutovalidateMode.onUserInteraction,
-                                validator: (value){
-                                  return value == null || value==0
-                                    ? 'Berat harus diisi atau tidak boleh 0!'
-                                    : null;
-                                },
-                              )
-                            )
-                          ],
-                        ),
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: Align(
-                          alignment: Alignment.topLeft,
-                          child: Text(
-                            "Origin",
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                          ),
-                        )
-                      ),
-
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Container(
-                              width: 210, 
-                              child: FutureBuilder<List<Province>>(
-                                future: provinceData,
-                                builder: (context, snapshot){
-                                  if(snapshot.hasData){
-                                    return DropdownButton(
-                                      isExpanded: true,
-                                      value: selectedProv,
-                                      icon: Icon(Icons.arrow_drop_down),
-                                      iconSize: 30,
-                                      elevation: 16,
-                                      style: TextStyle(color: Colors.black),
-                                      hint: selectedProv == null
-                                      ? Text('Pilih provinsi')
-                                      : Text(selectedProv.province),
-                                      items: snapshot.data!.map<DropdownMenuItem<Province>>(
-                                        (Province value){
-                                          return DropdownMenuItem(
-                                            value: value,
-                                            child: Text(value.province.toString())
-                                          );
-                                        }
-                                      ).toList(),
-                                      onChanged: (newValue){
-                                        setState(() {
-                                          selectedProv = newValue;
-                                          provId = selectedProv.provinceId;
-                                        });
-                                        selectedCity = null;
-                                        cityData = getCities(provId);
-
-                                      }
+              width: double.infinity,
+              height: double.infinity,
+              child: Column(
+                children: [
+                  //Flexible untuk form
+                  Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(16.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              DropdownButton(
+                                  value: dropdownvalue,
+                                  icon: const Icon(Icons.arrow_drop_down),
+                                  items: kurir.map((String items) {
+                                    return DropdownMenuItem(
+                                      value: items,
+                                      child: Text(items),
                                     );
-                                  }else if(snapshot.hasError){
-                                    return Text("Tidak ada data.");
-                                  }
-                                  return uiloading.loadingDD();
-                                }
+                                  }).toList(),
+                                  onChanged: (String? newValue) {
+                                    setState(() {
+                                      dropdownvalue = newValue!;
+                                    });
+                                  }),
+                              SizedBox(
+                                  width: 200,
+                                  child: TextFormField(
+                                    keyboardType: TextInputType.number,
+                                    controller: ctrlBerat,
+                                    decoration: const InputDecoration(
+                                      labelText: 'Berat (gr)',
+                                    ),
+                                    autovalidateMode:
+                                        AutovalidateMode.onUserInteraction,
+                                    validator: (value) {
+                                      return value == null || value == 0
+                                          ? 'Berat harus diisi atau tidak boleh 0!'
+                                          : null;
+                                    },
+                                  ))
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        const Padding(
+                            //Origin---------------------------------------------------
+                            padding: EdgeInsets.all(16.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Origin",
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue),
                               ),
-                            )
-                          ],
-                        )
-                      ),
+                            )),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: 150,
+                                  child: FutureBuilder<List<Province>>(
+                                      future: provinceData,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return DropdownButton(
+                                              isExpanded: true,
+                                              value: selectedProvOrigin,
+                                              icon: const Icon(
+                                                  Icons.arrow_drop_down),
+                                              iconSize: 30,
+                                              elevation: 16,
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                              hint: selectedProvOrigin == null
+                                                  ? Text('Pilih provinsi')
+                                                  : Text(selectedProvOrigin
+                                                      .province),
+                                              items: snapshot.data!.map<
+                                                      DropdownMenuItem<
+                                                          Province>>(
+                                                  (Province value) {
+                                                return DropdownMenuItem(
+                                                    value: value,
+                                                    child: Text(value.province
+                                                        .toString()));
+                                              }).toList(),
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  selectedProvOrigin = newValue;
+                                                  provId = selectedProvOrigin
+                                                      .provinceId;
+                                                  isProvinceOriginSelected =
+                                                      true;
+                                                });
+                                                selectedCityOrigin = null;
+                                                cityDataOrigin =
+                                                    getCities(provId);
+                                              });
+                                        } else if (snapshot.hasError) {
+                                          return const Text("Tidak ada data.");
+                                        }
 
-                    ],
+                                        return uiloading.loadingDD();
+                                      }),
+                                ),
+                                Container(
+                                  width: 150,
+                                  child: FutureBuilder<List<City>>(
+                                      future: cityDataOrigin,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return DropdownButton(
+                                              isExpanded: true,
+                                              value: selectedCityOrigin,
+                                              icon: const Icon(
+                                                  Icons.arrow_drop_down),
+                                              iconSize: 30,
+                                              elevation: 16,
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                              hint: selectedCityOrigin == null
+                                                  ? Text('Pilih kota')
+                                                  : Text(selectedCityOrigin
+                                                      .cityName),
+                                              items: snapshot.data!
+                                                  .map<DropdownMenuItem<City>>(
+                                                      (City value) {
+                                                return DropdownMenuItem(
+                                                    value: value,
+                                                    child: Text(value.cityName
+                                                        .toString()));
+                                              }).toList(),
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  selectedCityOrigin = newValue;
+                                                  isCityOriginSelected = true;
+                                                });
+                                              });
+                                        } else if (snapshot.hasError) {
+                                          return const Text("Tidak ada data.");
+                                        }
+
+                                        if (isProvinceOriginSelected == false) {
+                                          return Text(
+                                              "Silahkan pilih provinsi");
+                                        } else {
+                                          return uiloading.loadingDD();
+                                        }
+                                      }),
+                                ),
+                              ],
+                            )),
+                        const SizedBox(
+                          height: 24,
+                        ),
+                        const Padding(
+                            // Destination ----------------------------------------------------
+                            padding: EdgeInsets.all(16.0),
+                            child: Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                "Destination",
+                                style: TextStyle(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.blue),
+                              ),
+                            )),
+                        Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: 150,
+                                  child: FutureBuilder<List<Province>>(
+                                      future: provinceData,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return DropdownButton(
+                                              isExpanded: true,
+                                              value: selectedProvDestination,
+                                              icon: const Icon(
+                                                  Icons.arrow_drop_down),
+                                              iconSize: 30,
+                                              elevation: 16,
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                              hint: selectedProvDestination ==
+                                                      null
+                                                  ? Text('Pilih provinsi')
+                                                  : Text(selectedProvDestination
+                                                      .province),
+                                              items: snapshot.data!.map<
+                                                      DropdownMenuItem<
+                                                          Province>>(
+                                                  (Province value) {
+                                                return DropdownMenuItem(
+                                                    value: value,
+                                                    child: Text(value.province
+                                                        .toString()));
+                                              }).toList(),
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  selectedProvDestination =
+                                                      newValue;
+                                                  provId =
+                                                      selectedProvDestination
+                                                          .provinceId;
+                                                  isProvinceDestinationSelected =
+                                                      true;
+                                                });
+                                                selectedCityDestination = null;
+                                                cityDataDestination =
+                                                    getCities(provId);
+                                              });
+                                        } else if (snapshot.hasError) {
+                                          return const Text("Tidak ada data.");
+                                        }
+                                        return uiloading.loadingDD();
+                                      }),
+                                ),
+                                Container(
+                                  width: 150,
+                                  child: FutureBuilder<List<City>>(
+                                      future: cityDataDestination,
+                                      builder: (context, snapshot) {
+                                        if (snapshot.hasData) {
+                                          return DropdownButton(
+                                              isExpanded: true,
+                                              value: selectedCityDestination,
+                                              icon: const Icon(
+                                                  Icons.arrow_drop_down),
+                                              iconSize: 30,
+                                              elevation: 16,
+                                              style: const TextStyle(
+                                                  color: Colors.black),
+                                              hint: selectedCityDestination ==
+                                                      null
+                                                  ? Text('Pilih kota')
+                                                  : Text(selectedCityDestination
+                                                      .cityName),
+                                              items: snapshot.data!
+                                                  .map<DropdownMenuItem<City>>(
+                                                      (City value) {
+                                                return DropdownMenuItem(
+                                                    value: value,
+                                                    child: Text(value.cityName
+                                                        .toString()));
+                                              }).toList(),
+                                              onChanged: (newValue) {
+                                                setState(() {
+                                                  selectedCityDestination =
+                                                      newValue;
+                                                  isCityDestinationSelected =
+                                                      true;
+                                                });
+                                              });
+                                        } else if (snapshot.hasError) {
+                                          return const Text("Tidak ada data.");
+                                        }
+
+                                        if (isProvinceDestinationSelected ==
+                                            false) {
+                                          return Text(
+                                              "Silahkan pilih provinsi");
+                                        } else {
+                                          return uiloading.loadingDD();
+                                        }
+                                      }),
+                                ),
+                              ],
+                            )),
+                        SizedBox(height: 24),
+                        ElevatedButton(
+                            style: ButtonStyle(
+                                shape: MaterialStateProperty.all<
+                                        RoundedRectangleBorder>(
+                                    RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(50.0),
+                            ))),
+                            onPressed: () {
+                              if (isProvinceDestinationSelected == true &&
+                                  isProvinceOriginSelected == true &&
+                                  isCityDestinationSelected == true &&
+                                  isCityOriginSelected == true) {
+                                Fluttertoast.showToast(
+                                    msg: "ORIGIN: " +
+                                        selectedCityOrigin.cityName.toString() +
+                                        ", DESTINATION: " +
+                                        selectedCityDestination.cityName
+                                            .toString(),
+                                    backgroundColor: Colors.green);
+                              } else {
+                                Fluttertoast.showToast(
+                                    msg:
+                                        "ORIGIN dan atau DESTINATION masih belum diset",
+                                    backgroundColor: Colors.red);
+                              }
+                            },
+                            child: Text("Hitung Estimasi Harga"))
+                      ],
+                    ),
                   ),
-                ),
 
-                //Felxible untuk nampilin data
-                Flexible(
-                  flex: 2,
-                  child: Container(),
-                )
-              ],
-            )
-          ),
+                  //Felxible untuk nampilin data
+                  Flexible(
+                    flex: 2,
+                    child: Container(),
+                  ),
+                ],
+              )),
           isLoading == true ? uiloading.loadingBlock() : Container(),
         ],
       ),
