@@ -17,13 +17,13 @@ class City extends Equatable {
     this.postalCode,
   });
 
-  factory City.fromMap(Map<String, dynamic> data) => City(
-        cityId: data['city_id'] as String?,
-        provinceId: data['province_id'] as String?,
-        province: data['province'] as String?,
-        type: data['type'] as String?,
-        cityName: data['city_name'] as String?,
-        postalCode: data['postal_code'] as String?,
+  factory City.fromJson(Map<String, dynamic> json) => City(
+        cityId: json['city_id'] as String?,
+        provinceId: json['province_id'] as String?,
+        province: json['province'] as String?,
+        type: json['type'] as String?,
+        cityName: json['city_name'] as String?,
+        postalCode: json['postal_code'] as String?,
       );
 
   Map<String, dynamic> toMap() => {
@@ -38,14 +38,14 @@ class City extends Equatable {
   /// `dart:convert`
   ///
   /// Parses the string and returns the resulting Json object as [City].
-  factory City.fromJson(String data) {
-    return City.fromMap(json.decode(data) as Map<String, dynamic>);
-  }
+  // factory City.fromJson(String data) {
+  //   return City.fromMap(json.decode(data) as Map<String, dynamic>);
+  // }
 
   /// `dart:convert`
   ///
   /// Converts [City] to a JSON string.
-  String toJson() => json.encode(toMap());
+  // String toJson() => json.encode(toMap());
 
   City copyWith({
     String? cityId,

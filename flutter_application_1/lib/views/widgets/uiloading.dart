@@ -28,4 +28,17 @@ class uiloading{
     );
   }
 
+  static Container loadingBlock(){
+    return Container(
+      alignment: Alignment.center,
+      width: double.infinity,
+      height: double.infinity,
+      color: Colors.black,
+      child: const SpinKitFadingCircle(
+        size: 50,
+        color: Color(0xFFFF5555),
+      ),
+    );
+  }
+
 }
