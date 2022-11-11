@@ -24,21 +24,27 @@ class _EmailsendState extends State<Emailsend> {
       appBar: AppBar(
         title: Text("Send Email"),
       ),
-      body: Container(
-        padding: EdgeInsets.all(16),
-        child: Form(
-            key: _loginKey,
-            child: TextFormField(
-                keyboardType: TextInputType.emailAddress,
-                decoration: const InputDecoration(
-                    labelText: "Email", prefixIcon: Icon(Icons.email)),
-                controller: ctrlEmail,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                validator: (value) {
-                  return !EmailValidator.validate(value.toString())
-                      ? 'Email tidak valid!'
-                      : null;
-                })),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Lottie.asset("assets/lottie/email.json", width: 300),
+          Container(
+            padding: EdgeInsets.all(16),
+            child: Form(
+                key: _loginKey,
+                child: TextFormField(
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: const InputDecoration(
+                        labelText: "Email", prefixIcon: Icon(Icons.email)),
+                    controller: ctrlEmail,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    validator: (value) {
+                      return !EmailValidator.validate(value.toString())
+                          ? 'Email tidak valid!'
+                          : null;
+                    })),
+          ),
+        ],
       ),
 
       floatingActionButton: FloatingActionButton(

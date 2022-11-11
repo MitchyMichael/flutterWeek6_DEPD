@@ -26,7 +26,6 @@ class MyApp extends StatelessWidget {
       title: 'DEPD X CC',
       theme: ThemeData(
         primarySwatch: Colors.blue,
-
       ),
       debugShowCheckedModeBanner: false,
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
@@ -108,6 +107,7 @@ class _MyHomePageState extends State<MyHomePage> {
       _handleInitialUri(); //Untuk print jika tidak ada uri yang masuk
       return Scaffold(
         body: Container(
+          // color: Colors.green,
           width: double.infinity,
           padding: EdgeInsets.all(20),
           child: Column(
@@ -119,35 +119,56 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Colors.blue,
                   fontWeight: FontWeight.bold,
                   fontSize: 24,
-                  ),
                 ),
+              ),
               //Image.asset("assets/gif/robot.gif"),
               Lottie.asset("assets/lottie/robot.json"),
-              Container(
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Emailsend()),
-                      );
-                    },
-                    child: Text("Send Mail Page")),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                        ))),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Emailsend()),
+                          );
+                        },
+                        child: Text("Send Mail Page")),
+                  ),
+                  SizedBox(
+                    width: 24,
+                  ),
+                  Container(
+                    child: ElevatedButton(
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(50.0),
+                        ))),
+                        onPressed: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const Ongkirpage()),
+                          );
+                        },
+                        child: Text("Ongkir Page")),
+                  )
+                ],
               ),
-              Container(
-                child: ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const Ongkirpage()),
-                      );
-                    },
-                    child: Text("Ongkir Page")),
-              )
+              
             ],
           ),
+          
         ),
+        
 
         // This trailing comma makes auto-formatting nicer for build methods.
       );
