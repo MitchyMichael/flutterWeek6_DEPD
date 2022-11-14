@@ -77,7 +77,7 @@ class _OngkirpageState extends State<Ongkirpage> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: 10000,
+          height: 1400,
           child: Stack(
             children: [
               Container(
@@ -88,7 +88,7 @@ class _OngkirpageState extends State<Ongkirpage> {
                     children: [
                       //Flexible untuk form
                       Flexible(
-                        flex: 100,
+                        flex: 3,
                         child: Column(
                           children: [
                             Lottie.asset(
@@ -456,7 +456,25 @@ class _OngkirpageState extends State<Ongkirpage> {
                       //Felxible untuk nampilin data
                       Flexible(
                         flex: 2,
-                        child: Container(),
+                        child: Container(
+                          width: double.infinity,
+                          height: double.infinity,
+                          child: listCosts.isEmpty
+                              ? const Align(
+                                  alignment: Alignment.center,
+                                  child: Text("Tidak ada data"))
+                              : ListView.builder(
+                                  itemCount: listCosts.length,
+                                  itemBuilder: (context, index) {
+                                    return LazyLoadingList(
+                                        initialSizeOfItems: 10,
+                                        loadMore: () {},
+                                        child: CardOngkir(listCosts[index]),
+                                        index: index,
+                                        hasMore: true);
+                                  },
+                                ),
+                        ),
                       ),
                     ],
                   )),

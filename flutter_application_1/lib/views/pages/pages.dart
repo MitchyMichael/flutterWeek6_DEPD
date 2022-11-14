@@ -8,6 +8,7 @@ import 'package:flutter_application_1/views/widgets/widgets.dart';
 
 import 'dart:convert';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:lazy_loading_list/lazy_loading_list.dart';
 
 import 'package:lottie/lottie.dart';
 
