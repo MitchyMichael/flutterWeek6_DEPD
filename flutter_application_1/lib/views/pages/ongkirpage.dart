@@ -9,7 +9,7 @@ class Ongkirpage extends StatefulWidget {
 
 class _OngkirpageState extends State<Ongkirpage> {
   bool isLoading = false;
-  String dropdownvalue = 'jne';
+  String selectedCourier = 'jne';
   var kurir = ['jne', 'pos', 'tiki'];
 
   final ctrlBerat = TextEditingController();
@@ -28,7 +28,8 @@ class _OngkirpageState extends State<Ongkirpage> {
     return listProvince;
   }
 
-  dynamic cityId;
+  dynamic cityIdOrigin;
+  dynamic cityIdDestination;
   dynamic cityDataOrigin;
   dynamic cityDataDestination;
   dynamic selectedCityOrigin;
@@ -49,6 +50,18 @@ class _OngkirpageState extends State<Ongkirpage> {
   bool isProvinceDestinationSelected = false;
   bool isCityDestinationSelected = false;
 
+  List<Costs> listCosts = [];
+  Future<dynamic> getCostsData() async {
+    await RajaOngkirServices.getMyOngkir(cityIdOrigin, cityIdDestination,
+            int.parse(ctrlBerat.text), selectedCourier)
+        .then((value) {
+      setState(() {
+        listCosts = value;
+      });
+      print(listCosts.toString());
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -58,12 +71,13 @@ class _OngkirpageState extends State<Ongkirpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text("Hitung Ongkir"),
       ),
       body: SingleChildScrollView(
         child: Container(
-          height: 1000,
+          height: 10000,
           child: Stack(
             children: [
               Container(
@@ -80,14 +94,28 @@ class _OngkirpageState extends State<Ongkirpage> {
                             Lottie.asset(
                               "assets/lottie/courier.json",
                             ),
+                            const Padding(
+                                //Origin---------------------------------------------------
+                                padding: EdgeInsets.all(16.0),
+                                child: Align(
+                                  alignment: Alignment.topLeft,
+                                  child: Text(
+                                    "Courier",
+                                    style: TextStyle(
+                                        fontSize: 24,
+                                        fontWeight: FontWeight.bold,
+                                        color: Colors.blue),
+                                  ),
+                                )),
                             Padding(
-                              padding: const EdgeInsets.all(16.0),
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 16),
                               child: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   DropdownButton(
-                                      value: dropdownvalue,
+                                      value: selectedCourier,
                                       icon: const Icon(Icons.arrow_drop_down),
                                       items: kurir.map((String items) {
                                         return DropdownMenuItem(
@@ -97,7 +125,7 @@ class _OngkirpageState extends State<Ongkirpage> {
                                       }).toList(),
                                       onChanged: (String? newValue) {
                                         setState(() {
-                                          dropdownvalue = newValue!;
+                                          selectedCourier = newValue!;
                                         });
                                       }),
                                   SizedBox(
@@ -228,6 +256,9 @@ class _OngkirpageState extends State<Ongkirpage> {
                                                           newValue;
                                                       isCityOriginSelected =
                                                           true;
+                                                      cityIdOrigin =
+                                                          selectedCityOrigin
+                                                              .cityId;
                                                     });
                                                   });
                                             } else if (snapshot.hasError) {
@@ -361,6 +392,9 @@ class _OngkirpageState extends State<Ongkirpage> {
                                                           newValue;
                                                       isCityDestinationSelected =
                                                           true;
+                                                      cityIdDestination =
+                                                          selectedCityDestination
+                                                              .cityId;
                                                     });
                                                   });
                                             } else if (snapshot.hasError) {
@@ -379,7 +413,7 @@ class _OngkirpageState extends State<Ongkirpage> {
                                     ),
                                   ],
                                 )),
-                            SizedBox(height: 24),
+                            SizedBox(height: 50),
                             ElevatedButton(
                                 style: ButtonStyle(
                                     shape: MaterialStateProperty.all<
@@ -387,24 +421,31 @@ class _OngkirpageState extends State<Ongkirpage> {
                                         RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(50.0),
                                 ))),
-                                onPressed: () async {
+                                onPressed: () {
                                   if (isProvinceDestinationSelected == true &&
                                       isProvinceOriginSelected == true &&
                                       isCityDestinationSelected == true &&
-                                      isCityOriginSelected == true) {
-                                    Fluttertoast.showToast(
-                                        msg: "ORIGIN: " +
-                                            selectedCityOrigin.cityName
-                                                .toString() +
-                                            ", DESTINATION: " +
-                                            selectedCityDestination.cityName
-                                                .toString(),
-                                        backgroundColor: Colors.green);
+                                      isCityOriginSelected == true &&
+                                      selectedCourier.isNotEmpty &&
+                                      ctrlBerat.text.isNotEmpty) {
+                                    getCostsData();
+
+                                    // Fluttertoast.showToast(
+                                    //     msg: "ORIGIN: " +
+                                    //         selectedCityOrigin.cityName
+                                    //             .toString() +
+                                    //         ", DESTINATION: " +
+                                    //         selectedCityDestination.cityName
+                                    //             .toString(),
+                                    //     backgroundColor: Colors.green);
+
                                   } else {
-                                    Fluttertoast.showToast(
-                                        msg:
-                                            "ORIGIN dan atau DESTINATION masih belum diset",
-                                        backgroundColor: Colors.red);
+                                    UiToast.toastErr("Semua field harus diisi");
+
+                                    // Fluttertoast.showToast(
+                                    //     msg:
+                                    //         "ORIGIN dan atau DESTINATION masih belum diset",
+                                    //     backgroundColor: Colors.red);
                                   }
                                 },
                                 child: Text("Hitung Estimasi Harga"))
