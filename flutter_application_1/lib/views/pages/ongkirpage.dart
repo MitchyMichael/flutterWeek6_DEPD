@@ -464,7 +464,7 @@ class _OngkirpageState extends State<Ongkirpage> {
                           height: double.infinity,
                           child: listCosts.isEmpty
                               ? const Align(
-                                  alignment: Alignment.center,
+                                  alignment: Alignment.topCenter,
                                   child: Text("Tidak ada data"))
                               : ListView.builder(
                                   itemCount: listCosts.length,
