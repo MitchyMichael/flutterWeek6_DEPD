@@ -40,7 +40,7 @@ class _CardOngkirState extends State<CardOngkir> {
               children: [
                 const SizedBox(height: 8),
                 Text(
-                  "Biaya: ${c.cost!.elementAt(0).value}",
+                  "Biaya: ${Helper.toIdr(c.cost!.elementAt(0).value)}",
                   style: TextStyle(
                     fontSize: 14,
                   ),

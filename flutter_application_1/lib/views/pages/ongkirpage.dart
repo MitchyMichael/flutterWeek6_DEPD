@@ -57,6 +57,7 @@ class _OngkirpageState extends State<Ongkirpage> {
         .then((value) {
       setState(() {
         listCosts = value;
+        isLoading = false;
       });
       print(listCosts.toString());
     });
@@ -428,6 +429,7 @@ class _OngkirpageState extends State<Ongkirpage> {
                                       isCityOriginSelected == true &&
                                       selectedCourier.isNotEmpty &&
                                       ctrlBerat.text.isNotEmpty) {
+                                        //isLoading = true;
                                     getCostsData();
 
                                     // Fluttertoast.showToast(
@@ -440,6 +442,7 @@ class _OngkirpageState extends State<Ongkirpage> {
                                     //     backgroundColor: Colors.green);
 
                                   } else {
+                                    
                                     UiToast.toastErr("Semua field harus diisi");
 
                                     // Fluttertoast.showToast(

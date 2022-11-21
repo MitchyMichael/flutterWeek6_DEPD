@@ -33,7 +33,7 @@ class uiloading{
       alignment: Alignment.center,
       width: double.infinity,
       height: double.infinity,
-      color: Colors.black,
+      color: Colors.white,
       child: const SpinKitFadingCircle(
         size: 50,
         color: Color(0xFFFF5555),
